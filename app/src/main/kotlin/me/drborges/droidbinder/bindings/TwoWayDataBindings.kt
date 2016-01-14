@@ -1,6 +1,8 @@
-package me.drborges.droidbinder.bindadapters
+package me.drborges.droidbinder.bindings
 
 import android.databinding.BindingAdapter
+import android.databinding.ObservableArrayList
+import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.widget.EditText
 import android.widget.TextView
@@ -30,5 +32,12 @@ object TwoWayDataBindings {
     @BindingAdapter("android:text")
     fun bindEditText(view: TextView, observable: ResponsiveObservable<String>) {
         view.text = observable.get()
+    }
+
+    @BindingAdapter("items")
+    fun <T> bindRecyclerView(view: RecyclerView, observable: Collection<T>) {
+        view.adapter?.let {
+//            view.adapter.
+        }
     }
 }

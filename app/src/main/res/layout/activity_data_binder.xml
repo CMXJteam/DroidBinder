@@ -36,12 +36,14 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add" />
+            android:text="Add"
+            app:onClickListener="@{viewModel.addPet}" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pets_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:items="@{viewModel.pets}" />
 
     </LinearLayout>
 </layout>
