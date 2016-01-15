@@ -4,12 +4,9 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import me.drborges.droidbinder.BR
 import me.drborges.droidbinder.R
-import me.drborges.droidbinder.adapters.DataBoundRecyclerViewAdapter
 import me.drborges.droidbinder.bindings.TwoWayDataBindings
 import me.drborges.droidbinder.databinding.ActivityDataBinderBinding
-import me.drborges.droidbinder.models.Pet
 import me.drborges.droidbinder.viewmodels.NewPetViewModel
 
 class DataBindingActivity : AppCompatActivity() {
@@ -30,7 +27,6 @@ class DataBindingActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityDataBinderBinding>(this, R.layout.activity_data_binder)
         binding.viewModel = viewModel
         binding.petsList.layoutManager = LinearLayoutManager(this)
-        binding.petsList.adapter = DataBoundRecyclerViewAdapter<Pet>(BR.pet, R.layout.pet_cell, viewModel.pets)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

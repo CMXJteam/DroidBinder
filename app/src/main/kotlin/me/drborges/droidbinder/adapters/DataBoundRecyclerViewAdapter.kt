@@ -7,22 +7,28 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
+abstract class RecyclerViewDataProvider<T> {
+    abstract val itemBindID: Int
+    abstract val items: ObservableList<T>
+    abstract fun itemLayoutID(viewType: Int): Int
+    open fun itemViewType(position: Int) = 0
+}
 
 class DataBoundViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
-class DataBoundRecyclerViewAdapter<T>(val bindingVariableID: Int, val itemLayout: Int, val items: ObservableList<T>) : RecyclerView.Adapter<DataBoundViewHolder>() {
-
+class DataBoundRecyclerViewAdapter<T>(val dataProvider: RecyclerViewDataProvider<T>) : RecyclerView.Adapter<DataBoundViewHolder>() {
     private var inflater: LayoutInflater? = null
 
-    override fun getItemCount() = items.size
-
     init {
-        items.addOnListChangedCallback(WeakReferenceOnListChangedCallback(this))
+        dataProvider.items.addOnListChangedCallback(WeakReferenceOnListChangedCallback(this))
     }
 
+    override fun getItemCount() = dataProvider.items.size
+    override fun getItemViewType(position: Int) = dataProvider.itemViewType(position)
+
     override fun onBindViewHolder(holder: DataBoundViewHolder, position: Int) {
-        val item = items[position]
-        holder.binding.setVariable(bindingVariableID, item)
+        val item = dataProvider.items[position]
+        holder.binding.setVariable(dataProvider.itemBindID, item)
         holder.binding.executePendingBindings()
     }
 
@@ -31,7 +37,7 @@ class DataBoundRecyclerViewAdapter<T>(val bindingVariableID: Int, val itemLayout
             inflater = LayoutInflater.from(parent?.context)
         }
 
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, itemLayout, parent, false)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, dataProvider.itemLayoutID(viewType), parent, false)
         return DataBoundViewHolder(binding)
     }
 }
