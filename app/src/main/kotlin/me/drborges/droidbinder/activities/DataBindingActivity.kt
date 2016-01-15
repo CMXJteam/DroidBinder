@@ -14,19 +14,27 @@ import me.drborges.droidbinder.viewmodels.NewPetViewModel
 
 class DataBindingActivity : AppCompatActivity() {
 
+    private var viewModel = NewPetViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = NewPetViewModel()
-        viewModel.pets.add(Pet("Rex", 5))
-        viewModel.pets.add(Pet("Dolly", 2))
-        viewModel.pets.add(Pet("Puppy", 15))
-        viewModel.pets.add(Pet("Scooby", 7))
+        savedInstanceState?.let {
+            val vm = savedInstanceState.getParcelable<NewPetViewModel>("viewmodel")
+            vm?.let {
+                viewModel = vm
+            }
+        }
 
         DataBindingUtil.setDefaultComponent { TwoWayDataBindings }
         val binding = DataBindingUtil.setContentView<ActivityDataBinderBinding>(this, R.layout.activity_data_binder)
         binding.viewModel = viewModel
         binding.petsList.layoutManager = LinearLayoutManager(this)
         binding.petsList.adapter = DataBoundRecyclerViewAdapter<Pet>(BR.pet, R.layout.pet_cell, viewModel.pets)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putParcelable("viewmodel", viewModel)
+        super.onSaveInstanceState(outState)
     }
 }
