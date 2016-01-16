@@ -19,8 +19,8 @@ class NewPetViewModel : BaseObservable(), Parcelable {
     val pets = object : RecyclerViewDataProvider<Pet>() {
         override val itemBindID = BR.pet
         override val items = ObservableArrayList<Pet>()
-        override fun itemViewType(position: Int) = 0
-        override fun itemLayoutID(viewType: Int) = R.layout.pet_cell
+        override fun itemViewType(position: Int) = if (position % 2 == 0) 0 else 1
+        override fun itemLayoutID(viewType: Int) = if (viewType == 0) R.layout.pet_even_cell else R.layout.pet_odd_cell
     }
 
     fun addPet(view: View) {
